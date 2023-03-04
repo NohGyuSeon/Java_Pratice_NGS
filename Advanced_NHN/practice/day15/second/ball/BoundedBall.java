@@ -1,0 +1,46 @@
+package NGS.NHN.practice.day15.second.ball;
+
+import java.awt.Color;
+import java.util.List;
+
+public class BoundedBall extends MovableBall implements Bounded {
+    Region bounds;
+
+    public BoundedBall(Point location, double radius, Color color) {
+        super(location, radius, color);
+        bounds = null;
+    }
+
+    public BoundedBall(Point location, double radius) {
+        this(location, radius, Color.RED);
+    }
+
+    public void setBounds(Region bounds) {
+        this.bounds = new Region((int) (bounds.getX() + radius), (int) (bounds.getY() + radius),
+                (int) (bounds.getWidth() - 2 * radius), (int) (bounds.getHeight() - 2 * radius));
+    }
+
+    public void turnX() {
+        motion.setDX(-motion.getDX());
+    }
+
+    public void turnY() {
+        motion.setDY(-motion.getDY());
+    }
+
+    @Override
+    public void next(List<Motion> effects) {
+        super.next(effects);
+
+        if ((bounds != null) && !bounds.isCollision(getRegion())) {
+            if (getX() < bounds.getX() || (bounds.getX() + bounds.getWidth() < getX())) {
+                turnX();
+            }
+
+            if (getY() < bounds.getY() || (bounds.getY() + bounds.getHeight() < getY())) {
+                turnY();
+            }
+        }
+    }
+
+}
